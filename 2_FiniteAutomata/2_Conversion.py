@@ -1,3 +1,15 @@
+# Variant 12
+# Q = {q0,q1,q2,q3},
+# ∑ = {a,b,c},
+# F = {q2},
+# δ(q0,b) = q0,
+# δ(q0,a) = q1,
+# δ(q1,c) = q1,
+# δ(q1,a) = q2,
+# δ(q3,a) = q1,
+# δ(q3,a) = q3,
+# δ(q2,a) = q3.
+
 class RegularGrammar:
     def __init__(self):
         self.VN = set()  # Non-terminals
@@ -51,7 +63,7 @@ class FiniteAutomaton:
             ('q0', 'a'): {'q1'},
             ('q1', 'c'): {'q1'},
             ('q1', 'a'): {'q2'},
-            ('q3', 'a'): {'q1', 'q3'},  # Changed to a set as it's now nondeterministic
+            ('q3', 'a'): {'q1', 'q3'},
             ('q2', 'a'): {'q3'}
         }
         self.start_state = 'q0'

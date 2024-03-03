@@ -50,54 +50,37 @@ class Grammar:
         }
         self.S = 'S'
 
-    def classify_grammar(self):
-        if self.is_type_0():
-            return "Type-0 (Unrestricted)"
-        elif self.is_type_1():
-            return "Type-1 (Context-Sensitive)"
-        elif self.is_type_2():
-            return "Type-2 (Context-Free)"
-        elif self.is_type_3():
-            return "Type-3 (Regular)"
+    def chomsky_classification(self):
+        context_free = True
+        context_sensitive = True
+        regular = True
+
+        for non_terminal, productions in self.P.items():
+            for production in productions:
+                # Check for regularity
+                if len(production) > 2 or (len(production) == 2 and production[0] in self.VN):
+                    regular = False
+
+                # Check for context-free
+                if non_terminal != self.S and len(production) > 1:
+                    context_free = False
+
+                # Check for context-sensitivity
+                if len(production) < 2 or non_terminal == self.S:
+                    continue
+                for symbol in production[1:]:
+                    if symbol in self.VN:
+                        context_sensitive = False
+                        break
+
+        if context_sensitive:
+            return "Type-1 (Context-sensitive) Grammar"
+        elif context_free:
+            return "Type-2 (Context-free) Grammar"
+        elif regular:
+            return "Type-3 (Regular) Grammar"
         else:
-            return "Unknown"
-
-    def is_type_0(self):
-        # Type-0 grammars are unrestricted grammars, having no restrictions on productions.
-        return True
-
-    def is_type_1(self):
-        # Type-1 grammars are context-sensitive grammars.
-        # They are of the form αAβ → αγβ where A is a non-terminal, α and β are strings of terminals and non-terminals,
-        # and γ is a non-empty string of terminals and non-terminals.
-        # All productions are of the form LHS -> RHS where len(LHS) <= len(RHS).
-        for non_terminal, productions in self.P.items():
-            for production in productions:
-                if len(non_terminal) > len(production):
-                    return False
-        return True
-
-    def is_type_2(self):
-        # Type-2 grammars are context-free grammars.
-        # They are of the form A → β where A is a single non-terminal and β is a string of terminals and/or non-terminals.
-        # All productions are of the form A -> RHS.
-        for non_terminal, productions in self.P.items():
-            for production in productions:
-                if len(production) > 1 or (len(production) == 1 and production[0] not in self.VT):
-                    return False
-        return True
-
-    def is_type_3(self):
-        # Type-3 grammars are regular grammars.
-        # They are of the form A → aB or A → a where A and B are non-terminals, and 'a' is a terminal.
-        # All productions are of the form A -> aB or A -> a or A -> ε.
-        for non_terminal, productions in self.P.items():
-            for production in productions:
-                if len(production) == 2 and (production[0] not in self.VT or production[1] not in self.VN):
-                    return False
-                elif len(production) > 2 or (len(production) == 2 and production[0] in self.VN):
-                    return False
-        return True
+            return "Type-0 (Unrestricted) Grammar"
     def generate_string(self):
         def expand(symbol):
             if symbol in self.VT:
@@ -145,4 +128,4 @@ user_input = input("\nEnter a string to check: ")
 result = fa.string_belongs_to_language(user_input)
 print(f"Does '{user_input}' belong to the language? {result}")
 grammar = Grammar()
-print("Chomsky Classification:", grammar.classify_grammar())
+print("Chomsky Classification:", grammar.chomsky_classification())
