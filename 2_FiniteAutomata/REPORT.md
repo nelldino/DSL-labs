@@ -158,6 +158,7 @@ The nfa_to_dfa() method converts an NFA to a DFA using the subset construction a
                             dfa.accept_states.add(next_state)
 
         return dfa
+        
 The method visualize() it is used to make a graphical representation of the DFA
 
 ## Conclusions / Screenshots / Results
