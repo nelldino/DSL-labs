@@ -8,7 +8,7 @@
 # δ(q1,a) = q2,
 # δ(q3,a) = q1,
 # δ(q3,a) = q3,
-# δ(q2,a) = q3.
+# δ(q2,a) = q3
 
 class RegularGrammar:
     def __init__(self):
