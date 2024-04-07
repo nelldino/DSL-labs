@@ -1,17 +1,65 @@
 import random
 
-def generate_string():
-    string = 'L'
-    string += random.choice(['M', 'N'])
-    string += 'O' * 3
-    p_count = random.randint(0, 5)
-    string += 'P' * p_count
-    string += 'Q'
-    string += random.choice(['2', '3'])
-    return string
+def generate_string(regex):
+    generated_string = ''
+    i = 0
+    while i < len(regex):
+        char = regex[i]
+        if char == '(':
+            # Find the matching closing parenthesis
+            closing_index = regex.find(')', i)
+            # Extract the substring within the parentheses
+            group = regex[i+1:closing_index]
+            # Choose a character from the group
+            chosen_char = random.choice(group.split('|'))
+            generated_string += chosen_char
+            print(f"Added {chosen_char}->{generated_string}")
+            print("Current string:", generated_string)
+            i = closing_index + 1  # Move to the next character after ')'
+        elif char == '*':
+            # Zero occurrences up to 5 occurrences
+            repetitions = random.randint(0, 4)
+            generated_string += generated_string[-1] * repetitions if generated_string else ''
+            print(f"Added {generated_string[-1] * repetitions}->{generated_string}")
+            print("Current string:", generated_string)
+            i += 1
+        elif char == '+':
+            # One occurrence up to 5 occurrences
+            repetitions = random.randint(1, 4)
+            generated_string += generated_string[-1] * repetitions if generated_string else ''
+            print(f"Added {generated_string[-1] * repetitions}->{generated_string}")
+            print("Current string:", generated_string)
+            i += 1
+        elif char.startswith('^'):
+            # If the '^' character is followed by a number
+            if i + 1 < len(regex) and regex[i + 1].isdigit():
+                # Repeat the preceding character 'n' times
+                repetitions = int(regex[i + 1])
+                generated_string += generated_string[-1] * (repetitions - 1)
+                print(f"Added {generated_string[-1] * (repetitions - 1)}->{generated_string}")
+                print("Current string:", generated_string)
+                i += 2  # Skip the '^' and the number
+            else:
+                # Otherwise, append '^' as is
+                generated_string += char
+                print(f"Added {char}->{generated_string}")
+                print("Current string:", generated_string)
+                i += 1
+        elif char == 'O':
+            # Handle 'O' separately
+            generated_string += char
+            print(f"Added {char}->{generated_string}")
+            print("Current string:", generated_string)
+            i += 1
+        else:
+            # Append the character as is
+            generated_string += char
+            print(f"Added {char}->{generated_string}")
+            print("Current string:", generated_string)
+            i += 1
+    return generated_string
 
-# Generate 5 strings that match the regular expression
-regex1 = "L(M|N)O^3P*Q(2|3)"
-for _ in range(5):
-    generated_string = generate_string()
-    print("Generated string:", generated_string)
+regex = "L(M|N)O^3P*Q(2|3)"
+print("Regular Expression:", regex)
+generated_string = generate_string(regex)
+print("\nFinal Generated String:", generated_string)
