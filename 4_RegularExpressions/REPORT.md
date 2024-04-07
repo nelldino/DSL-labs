@@ -17,6 +17,7 @@ Usually such patterns are used by string-searching algorithms for "find" or "fin
 , handling text files with a consistent syntax, like a CSV
 , reading configuration files
 , searching and refactoring code
+
 ## Objectives:
 
 1.Write and cover what regular expressions are, what they are used for;
@@ -33,76 +34,71 @@ c. Bonus point: write a function that will show sequence of processing regular e
 
 **Variant 4** 
 
-<img width="548" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/991c00a2-8d53-48e7-a019-82e15e9a147f">
+<img width="548" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/991c00a2-8d53-48e7-a019-82e15e9a147f"
 
-In my variant, I have 3 different regular expressions and made a program for each of them. 
+In my variant, I have 3 different regular expressions, but since all of the regular expression above have the same symbols, I will explain how the code works for the first regex.
+
+Some of the symbols that my code will handle are:
+
+"|" - either first character will be output, etiher the next one
+
+"*" - zero or more occurences (up to 5) of a character
+
+"+" - one or more occurences (up to 5) of a character
+
+"^n" - n occurences of the character
 
 First regular expression:
 
     regex1 = "(S|T)(U|V)W*(Y^+)24"
 
-I have a function for generating a string:
+Whenever the "|" symbol is present, the characters to choose from are isolated with parathesis, so first, the code will handle and search for the matching paranthesis. 
 
-    def generate_string():
-        string = random.choice(['S', 'T'])
-        string += random.choice(['U', 'V'])
-        string += 'W' * random.randint(0, 5)
-        string += 'Y' * random.randint(1, 5)  # Ensure at least one Y
-        string += '24'
-    return string
-'|' means either first or second characther will appear, which is why I used a random.choice for S, T, U and V. '*' symbol means that the preceding character will have 0 or more occurences ( according to the lab task, it will have at most 5 occurances). The '+' sign matches one or more occurences of the preceding character.'24' is a character that have to appear in each generated string.
+        if char == '(':
+            closing_index = regex.find(')', i)
+            group = regex[i+1:closing_index]
+            chosen_char = random.choice(group.split('|'))
+            generated_string += chosen_char
 
-Second regular expression:
+After this, a character will be randomly choosen  from the group defined within parentheses separated by '|'.
 
-    regex2 = "L(M|N)O^3P*Q(2|3)"
+For the '*' symbol, a random integer will be generated, up to 5, which means that **'repetitions'** can take any value between 0 and 4. Then this part will append to the last character of so generated string. If there is no generated_string, then an empty string will append.
 
-The function that will generate the strings:
+        repetitions = random.randint(0, 4)
+        generated_string += generated_string[-1] * repetitions if generated_string else ''
 
-    def generate_string():
-        string = 'L'
-        string += random.choice(['M', 'N'])
-        string += 'O' * 3
-        p_count = random.randint(0, 5)
-        string += 'P' * p_count
-        string += 'Q'
-        string += random.choice(['2', '3'])
-     return string
+The '+' will act the same as the '*' symbol, but will take a value from 1 to 4. 
 
-Here I applied the same logic as for the first regular expression. In this case, we have the '^3' symbol, which means that the preceding character must have three occurences.
+            repetitions = random.randint(1, 4)
+            generated_string += generated_string[-1] * repetitions if generated_string else ''
 
-Third regular expression:
+In the case for '^n', first will check if the there is at least one more character in the regex after the current character to avoid index out of range erros and the chcekc if the next character in the regular epxression is a digit. If both conditions are true, then the digit character after the current character will be convert it into an integer and assigned to the **'repetitions'** value. Next, the last character of the string **(generated_string[-1])** will have **repetitions - 1** times, since one occurence of the character was already added.
 
-    regex3 = "R*S(T|U|V)W(X|Y|Z)^2"
+            if i + 1 < len(regex) and regex[i + 1].isdigit():
+                repetitions = int(regex[i + 1])
+                generated_string += generated_string[-1] * (repetitions - 1)
 
-The function that will generate the strings:
+Because I wanted to see step by step how the characters are append to the generation of the strings, I used the following lines of codes:
 
-      def generate_string():
-          string = 'R' * random.randint(0, 5)
-          string += 'S'
-          string += random.choice(['T', 'U', 'V'])
-          string += 'W'
-          string += random.choice(['X', 'Y', 'Z'])
-          string += random.choice(['X', 'Y', 'Z'])
-       return string
-
-In this case, 'R' will have 0 or more occurences. 'S' character must appear in each generated string. Then 'T', 'U', or 'V' can occur in each string. 'W' is another characther that has to appear. Then, 'X', 'Y' or 'Z' might be generated and '^2' means that it has to appear twice.
-
+            print(f"Added {chosen_char}->{generated_string}")
+            print("Current string:", generated_string)
 ## Conclusions / Screenshots / Results
 
 **Results**
 
 Results for first regular expression:
 
-<img width="200" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/12b56e7a-512d-45aa-9800-0f706dd26a27">
-<img width="196" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/da7315cd-c83e-461a-be94-0e61c424c0f0">
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/832b0c32-91c9-443f-a2c9-7f755799c0cf)
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/11be2437-d6e5-48a4-8942-62ddd27a32a3)
 
 Results for second regular expression:
 
-<img width="190" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/429348b0-962a-4078-a2b2-94d062874da5">
-<img width="191" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/2b32a84a-b71f-4665-8228-77ceda7a635a">
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/3d0101e4-9c2f-41da-8e07-5145fee42671)
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/56c93a94-13bf-4710-a3ae-080cea428103)
 
 Results for third generated expression:
 
-<img width="188" alt="Screenshot 2024-03-30 203808" src="https://github.com/nelldino/DSL-labs/assets/120444803/b4bd7d3c-405e-4a2d-81b6-15cf0609d8a6">
-<img width="187" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/e2856619-6dca-4445-91d6-0b9cf07a1ae4">
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/1907ba35-bb75-497f-8800-f7c4f7ec42b7)
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/f9fcef76-1f66-4538-9b4b-978ac4eda0ce)
+
 
