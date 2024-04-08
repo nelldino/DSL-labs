@@ -34,7 +34,8 @@ c. Bonus point: write a function that will show sequence of processing regular e
 
 **Variant 4** 
 
-<img width="548" alt="image" src="https://github.com/nelldino/DSL-labs/assets/120444803/991c00a2-8d53-48e7-a019-82e15e9a147f"
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/7b0ab7d7-9695-47f2-aad9-8d1a5bfa7bd8)
+
 
 In my variant, I have 3 different regular expressions, but since all of the regular expression above have the same symbols, I will explain how the code works for the first regex.
 
@@ -52,7 +53,11 @@ First regular expression:
 
     regex1 = "(S|T)(U|V)W*(Y^+)24"
 
-Whenever the "|" symbol is present, the characters to choose from are isolated with parathesis, so first, the code will handle and search for the matching paranthesis. 
+Whenever the | symbol is present, it indicates alternative options. In the regular expression, characters to choose from are isolated within parentheses.
+The code first handles and searches for the matching parentheses.
+If the current character is '(', it finds the closing parenthesis ')' to determine the group.
+It then chooses a character randomly from the group defined within the parentheses separated by '|'.
+The chosen character is appended to the generated_string.
 
         if char == '(':
             closing_index = regex.find(')', i)
@@ -60,25 +65,33 @@ Whenever the "|" symbol is present, the characters to choose from are isolated w
             chosen_char = random.choice(group.split('|'))
             generated_string += chosen_char
 
-After this, a character will be randomly choosen  from the group defined within parentheses separated by '|'.
-
-For the '*' symbol, a random integer will be generated, up to 5, which means that **'repetitions'** can take any value between 0 and 4. Then this part will append to the last character of so generated string. If there is no generated_string, then an empty string will append.
+The * symbol signifies zero or more occurrences of the preceding character.
+A random integer between 0 and 4 is generated, representing the number of repetitions.
+The last character of the generated string is then repeated by the determined number of repetitions and appended to the generated string.
+If generated_string is empty, an empty string is appended.
 
         repetitions = random.randint(0, 4)
         generated_string += generated_string[-1] * repetitions if generated_string else ''
 
-The '+' will act the same as the '*' symbol, but will take a value from 1 to 4. 
+The + symbol represents one or more occurrences of the preceding character.
+Similar to *, a random integer between 1 and 4 is generated, indicating the number of repetitions.
+The last character of the generated string is repeated by the determined number of repetitions and appended to the generated string.
+If generated_string is empty, an empty string is appended.
 
             repetitions = random.randint(1, 4)
             generated_string += generated_string[-1] * repetitions if generated_string else ''
 
-In the case for '^n', first will check if the there is at least one more character in the regex after the current character to avoid index out of range erros and the chcekc if the next character in the regular epxression is a digit. If both conditions are true, then the digit character after the current character will be convert it into an integer and assigned to the **'repetitions'** value. Next, the last character of the string **(generated_string[-1])** will have **repetitions - 1** times, since one occurence of the character was already added.
+This pattern signifies exactly n occurrences of the preceding character.
+The code checks if there is at least one more character in the regex after the current character to avoid index out-of-range errors.
+It then checks if the next character in the regular expression is a digit.
+If both conditions are true, the digit character after the current character is converted into an integer (n) and assigned to the repetitions variable.
+Next, the last character of the string (generated_string[-1]) will be repeated n - 1 times, since one occurrence of the character was already added.
 
             if i + 1 < len(regex) and regex[i + 1].isdigit():
                 repetitions = int(regex[i + 1])
                 generated_string += generated_string[-1] * (repetitions - 1)
 
-Because I wanted to see step by step how the characters are append to the generation of the strings, I used the following lines of codes:
+Additionally, the code includes print statements to show step-by-step how the characters are appended to the generation of the strings, providing clarity on the progression of string generation.
 
             print(f"Added {chosen_char}->{generated_string}")
             print("Current string:", generated_string)
