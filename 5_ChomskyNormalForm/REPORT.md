@@ -26,7 +26,8 @@ binary productions (all productions are either of the form ```A → BC``` (where
 ## Implementation description
 
 Assigned variant:
-![image](https://github.com/nelldino/DSL-labs/assets/120444803/f4286a49-85ae-44e6-b76e-f673ad55ed63)
+![image](https://github.com/nelldino/DSL-labs/assets/120444803/0f684b14-8e45-4c99-90a4-bf2ebec3b8d6)
+
 
 The provided Python code in file ```Grammar.py``` defines a class Grammar that encapsulates a context-free grammar and includes methods for transforming it into Chomsky Normal Form. The conversion process involves several steps, according to all the rules of CNF.
 The ```Grammar``` class is defined to define the components of a context-free grammar: non-terminals, terminals, production rules, and a start symbol.
